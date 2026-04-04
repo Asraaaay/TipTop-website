@@ -1,4 +1,6 @@
 import "@/App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import { Header } from "./components/Header";
 import { HeroSection } from "./components/HeroSection";
 import { ServicesSection } from "./components/ServicesSection";
@@ -11,10 +13,13 @@ import { ContactSection } from "./components/ContactSection";
 import { Footer } from "./components/Footer";
 import { WhatsAppButton } from "./components/WhatsAppButton";
 import { Toaster } from "./components/ui/sonner";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AdminDashboard } from "./pages/AdminDashboard";
 
-function App() {
+// Homepage component
+const HomePage = () => {
   return (
-    <div className="App min-h-screen">
+    <>
       <Header />
       <main>
         <HeroSection />
@@ -28,8 +33,24 @@ function App() {
       </main>
       <Footer />
       <WhatsAppButton />
-      <Toaster position="top-right" />
-    </div>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <div className="App min-h-screen">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Routes>
+        </BrowserRouter>
+        <Toaster position="top-right" />
+      </div>
+    </AuthProvider>
   );
 }
 

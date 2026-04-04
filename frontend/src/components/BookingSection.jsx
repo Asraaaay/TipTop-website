@@ -4,11 +4,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popove
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { CalendarIcon, CheckCircle, Loader2 } from "lucide-react";
+import { CalendarIcon, CheckCircle, Loader2, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const ADMIN_WHATSAPP = "911234567890";
 
 const services = [
   { value: "dry-cleaning", label: "Dry Cleaning" },
@@ -26,6 +27,21 @@ const timeSlots = [
   "6:00 PM - 8:00 PM",
 ];
 
+// Function to open WhatsApp with pre-filled message for admin
+const sendAdminWhatsAppAlert = (bookingData) => {
+  const serviceName = services.find(s => s.value === bookingData.service)?.label || bookingData.service;
+  const message = encodeURIComponent(
+    `🔔 New Booking Alert!\n\n` +
+    `👤 Customer: ${bookingData.name}\n` +
+    `📱 Phone: ${bookingData.phone}\n` +
+    `📍 Address: ${bookingData.address}\n` +
+    `🧺 Service: ${serviceName}\n` +
+    `📅 Pickup: ${bookingData.pickup_date} (${bookingData.pickup_time})\n\n` +
+    `Please confirm the booking.`
+  );
+  window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${message}`, "_blank");
+};
+
 export const BookingSection = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -38,6 +54,7 @@ export const BookingSection = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [successData, setSuccessData] = useState(null);
 
   const validateForm = () => {
     const newErrors = {};
@@ -68,7 +85,21 @@ export const BookingSection = () => {
       };
       
       await axios.post(`${BACKEND_URL}/api/bookings`, payload);
+      
+      // Store success data for WhatsApp message
+      setSuccessData({
+        ...formData,
+        pickup_date: format(formData.pickup_date, "dd MMM yyyy"),
+      });
+      
       setIsSuccess(true);
+      
+      // Send WhatsApp alert to admin (opens in new tab)
+      sendAdminWhatsAppAlert({
+        ...formData,
+        pickup_date: format(formData.pickup_date, "dd MMM yyyy"),
+      });
+      
       setFormData({
         name: "",
         phone: "",
@@ -92,6 +123,21 @@ export const BookingSection = () => {
     }
   };
 
+  // Function for customer to send WhatsApp message
+  const sendCustomerWhatsApp = () => {
+    if (!successData) return;
+    const serviceName = services.find(s => s.value === successData.service)?.label || successData.service;
+    const message = encodeURIComponent(
+      `Hi Tip Top Dry Cleaning Studio,\n\n` +
+      `I just booked a pickup:\n` +
+      `🧺 Service: ${serviceName}\n` +
+      `📅 Pickup: ${successData.pickup_date} (${successData.pickup_time})\n` +
+      `📍 Address: ${successData.address}\n\n` +
+      `Please confirm my booking. Thank you!`
+    );
+    window.open(`https://wa.me/${ADMIN_WHATSAPP}?text=${message}`, "_blank");
+  };
+
   if (isSuccess) {
     return (
       <section id="booking" className="section-padding bg-white" data-testid="booking-section">
@@ -103,11 +149,30 @@ export const BookingSection = () => {
             <h2 className="heading-primary text-3xl sm:text-4xl mb-4" data-testid="booking-success-title">
               Booking Confirmed!
             </h2>
-            <p className="font-dm-sans text-slate-600 mb-8">
+            <p className="font-dm-sans text-slate-600 mb-6">
               Thank you for choosing Tip Top Dry Cleaning Studio. We'll contact you shortly to confirm your pickup.
             </p>
+            
+            {/* WhatsApp Confirmation Button */}
+            <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
+              <p className="font-dm-sans text-green-800 mb-4">
+                Want instant confirmation? Send us a WhatsApp message!
+              </p>
+              <button
+                onClick={sendCustomerWhatsApp}
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-dm-sans font-medium px-6 py-3 rounded-md transition-colors"
+                data-testid="whatsapp-confirm-btn"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Confirm via WhatsApp
+              </button>
+            </div>
+            
             <button
-              onClick={() => setIsSuccess(false)}
+              onClick={() => {
+                setIsSuccess(false);
+                setSuccessData(null);
+              }}
               className="bg-teal hover:bg-teal-dark text-white font-dm-sans font-medium px-6 py-3 rounded-md transition-colors"
               data-testid="book-another-btn"
             >
