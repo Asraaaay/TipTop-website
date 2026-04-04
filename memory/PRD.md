@@ -1,82 +1,89 @@
 # Tip Top Dry Cleaning Studio - PRD
 
 ## Original Problem Statement
-Create a modern, professional, and highly interactive website for a premium laundry and dry cleaning service brand named "Tip Top Dry Cleaning Studio" with:
-- Clean, minimal, premium UI design
-- Color palette: White, deep blue, light gray, teal accents
-- Hero section with CTAs
-- Sticky navigation
-- Services grid (5 services)
-- Pricing with Regular/Express toggle
-- How It Works section (4 steps)
-- Booking form with validation
-- Testimonials carousel
-- About Us section
-- Contact with Google Maps
-- WhatsApp floating button
+Create a modern, professional, and highly interactive website for a premium laundry and dry cleaning service brand named "Tip Top Dry Cleaning Studio".
 
 ## User Personas
-1. **Individual Customers** - Busy professionals seeking convenient laundry pickup
-2. **Families** - Looking for regular laundry subscription services
-3. **Business Clients** - Hotels/offices needing bulk cleaning
+1. **Customers** - Book laundry pickup services
+2. **Admins** - Manage bookings, update status, communicate with customers
 
 ## Core Requirements (Static)
-- [x] Premium hero section with high-quality imagery
-- [x] Sticky navigation with smooth scroll
-- [x] Service showcase with bento grid layout
-- [x] Pricing with toggle (Regular 48hrs / Express 24hrs)
+- [x] Premium landing page with hero section
+- [x] Services, Pricing, How It Works sections
 - [x] Interactive booking form with validation
-- [x] Customer testimonials carousel
-- [x] Contact information with Google Maps
-- [x] WhatsApp floating button for quick contact
+- [x] Testimonials, About, Contact sections
+- [x] WhatsApp floating button
 - [x] Mobile responsive design
-- [x] SEO optimized structure
 
-## What's Been Implemented (2026-04-04)
-### Backend
-- FastAPI server with booking management
-- Endpoints: /api/bookings, /api/services, /api/pricing, /api/testimonials, /api/contact
-- MongoDB integration for data persistence
+## What's Been Implemented
 
-### Frontend
-- Header component with sticky navigation
-- HeroSection with animated elements and stats
-- ServicesSection with bento grid layout
-- HowItWorks with 4-step process
-- PricingSection with Regular/Express toggle
-- BookingSection with form validation (name, phone, address, service, date, time)
-- TestimonialsSection with carousel
-- AboutSection with company info and features
-- ContactSection with Google Maps embed
-- Footer with social links
-- WhatsAppButton floating component
+### Phase 1 (2026-04-04) - MVP
+- Full landing page with all sections
+- Booking form with MongoDB persistence
+- WhatsApp floating button
 
-### Design
-- Typography: Outfit (headings), DM Sans (body)
-- Colors: Navy (#0A192F), Teal (#0D9488), White, Crisp Gray
-- Animations: Fade-up, hover effects, carousel transitions
+### Phase 2 (2026-04-04) - Admin & Alerts
+- **Admin Authentication**: JWT-based login with email/password
+- **Admin Dashboard**: 
+  - Stats overview (Total, Pending, Confirmed, Completed, Cancelled, Today)
+  - Bookings table with filtering by status
+  - Update booking status (pending/confirmed/completed/cancelled)
+  - Delete bookings
+  - WhatsApp link to message customers
+  - Call customers directly
+- **WhatsApp Alerts**: 
+  - Admin receives alert when new booking is created
+  - Customer can send confirmation via WhatsApp
+  - Both use wa.me links (free, no API required)
+
+### Admin Credentials
+- Email: admin@tiptop.com
+- Password: admin123
+- Dashboard: /admin
+
+## Technical Stack
+- **Backend**: FastAPI + MongoDB (Motor async driver)
+- **Frontend**: React + Tailwind CSS + Shadcn UI
+- **Auth**: JWT tokens with httpOnly cookies
+- **Database**: MongoDB (bookings, users, contact_messages)
+
+## API Endpoints
+### Public
+- POST /api/bookings - Create booking
+- GET /api/bookings - Get all bookings
+- GET /api/services - Get services list
+- GET /api/pricing - Get pricing
+- POST /api/contact - Submit contact message
+
+### Auth
+- POST /api/auth/login - Admin login
+- POST /api/auth/logout - Admin logout
+- GET /api/auth/me - Get current user
+
+### Admin (Protected)
+- GET /api/admin/stats - Get booking statistics
+- GET /api/admin/bookings - Get all bookings (with filter)
+- PUT /api/admin/bookings/{id} - Update booking status
+- DELETE /api/admin/bookings/{id} - Delete booking
 
 ## Prioritized Backlog
 
 ### P0 (Critical) - COMPLETED
-- [x] Core website sections
-- [x] Booking functionality
-- [x] Mobile responsiveness
+- [x] Landing page with booking
+- [x] Admin dashboard
+- [x] WhatsApp alerts
 
 ### P1 (High Priority)
-- [ ] User authentication (login/signup)
-- [ ] Order tracking dashboard
-- [ ] Email notifications for bookings
-- [ ] Admin panel for managing bookings
+- [ ] Email notifications (SendGrid/Resend)
+- [ ] SMS notifications (Twilio)
+- [ ] Order tracking for customers
 
 ### P2 (Medium Priority)
 - [ ] Payment integration (Stripe/Razorpay)
-- [ ] SMS notifications
+- [ ] Customer accounts
 - [ ] Loyalty program
-- [ ] Multi-language support
 
 ## Next Tasks
-1. Add user authentication for order tracking
-2. Build admin dashboard for booking management
-3. Integrate payment gateway
-4. Add email/SMS notifications
+1. Add email notifications for booking confirmations
+2. Implement SMS alerts via Twilio
+3. Create customer login for order tracking
