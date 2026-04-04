@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,10 +6,9 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from typing import List, Optional
 import uuid
 from datetime import datetime, timezone
-
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -19,52 +18,181 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
+# Create the main app
 app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-
 # Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
+class BookingCreate(BaseModel):
+    name: str
+    phone: str
+    address: str
+    service: str
+    pickup_date: str
+    pickup_time: str
+
+class Booking(BaseModel):
+    model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    name: str
+    phone: str
+    address: str
+    service: str
+    pickup_date: str
+    pickup_time: str
+    status: str = "pending"
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class ContactMessage(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    email: str
+    phone: str
+    message: str
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
-# Add your routes to the router instead of directly to app
+class ContactMessageCreate(BaseModel):
+    name: str
+    email: str
+    phone: str
+    message: str
+
+# API Routes
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Tip Top Dry Cleaning Studio API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
+@api_router.post("/bookings", response_model=Booking)
+async def create_booking(input: BookingCreate):
+    booking_obj = Booking(**input.model_dump())
+    doc = booking_obj.model_dump()
+    await db.bookings.insert_one(doc)
+    return booking_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.get("/bookings", response_model=List[Booking])
+async def get_bookings():
+    bookings = await db.bookings.find({}, {"_id": 0}).to_list(1000)
+    return bookings
+
+@api_router.get("/bookings/{booking_id}", response_model=Booking)
+async def get_booking(booking_id: str):
+    booking = await db.bookings.find_one({"id": booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    return booking
+
+@api_router.post("/contact", response_model=ContactMessage)
+async def create_contact_message(input: ContactMessageCreate):
+    message_obj = ContactMessage(**input.model_dump())
+    doc = message_obj.model_dump()
+    await db.contact_messages.insert_one(doc)
+    return message_obj
+
+@api_router.get("/services")
+async def get_services():
+    return {
+        "services": [
+            {
+                "id": "dry-cleaning",
+                "name": "Dry Cleaning",
+                "description": "Premium dry cleaning for delicate fabrics and formal wear",
+                "icon": "Sparkles"
+            },
+            {
+                "id": "steam-ironing",
+                "name": "Steam Ironing",
+                "description": "Professional steam pressing for wrinkle-free perfection",
+                "icon": "Wind"
+            },
+            {
+                "id": "wash-fold",
+                "name": "Wash & Fold",
+                "description": "Complete laundry service with careful folding",
+                "icon": "Shirt"
+            },
+            {
+                "id": "shoe-cleaning",
+                "name": "Shoe Cleaning",
+                "description": "Expert shoe care and restoration services",
+                "icon": "Footprints"
+            },
+            {
+                "id": "curtain-cleaning",
+                "name": "Curtain Cleaning",
+                "description": "Deep cleaning for curtains and drapes",
+                "icon": "LayoutGrid"
+            }
+        ]
+    }
+
+@api_router.get("/pricing")
+async def get_pricing():
+    return {
+        "regular": [
+            {"item": "Shirt", "price": 60},
+            {"item": "Pants/Trousers", "price": 80},
+            {"item": "T-Shirt", "price": 50},
+            {"item": "Saree", "price": 150},
+            {"item": "Suit (2 pc)", "price": 350},
+            {"item": "Blazer/Jacket", "price": 200},
+            {"item": "Kurta", "price": 80},
+            {"item": "Dress", "price": 180},
+            {"item": "Coat", "price": 300},
+            {"item": "Blanket", "price": 250}
+        ],
+        "express": [
+            {"item": "Shirt", "price": 90},
+            {"item": "Pants/Trousers", "price": 120},
+            {"item": "T-Shirt", "price": 75},
+            {"item": "Saree", "price": 225},
+            {"item": "Suit (2 pc)", "price": 525},
+            {"item": "Blazer/Jacket", "price": 300},
+            {"item": "Kurta", "price": 120},
+            {"item": "Dress", "price": 270},
+            {"item": "Coat", "price": 450},
+            {"item": "Blanket", "price": 375}
+        ]
+    }
+
+@api_router.get("/testimonials")
+async def get_testimonials():
+    return {
+        "testimonials": [
+            {
+                "id": 1,
+                "name": "Priya Sharma",
+                "rating": 5,
+                "text": "Excellent service! My silk sarees have never looked better. The team handles everything with such care.",
+                "avatar": "PS"
+            },
+            {
+                "id": 2,
+                "name": "Rahul Mehta",
+                "rating": 5,
+                "text": "Fast pickup and delivery. My office shirts are always perfectly pressed. Highly recommend!",
+                "avatar": "RM"
+            },
+            {
+                "id": 3,
+                "name": "Anita Desai",
+                "rating": 5,
+                "text": "The curtain cleaning service transformed my home. Professional team and great results.",
+                "avatar": "AD"
+            },
+            {
+                "id": 4,
+                "name": "Vikram Singh",
+                "rating": 5,
+                "text": "Best dry cleaning in town! They removed stains I thought were permanent. Amazing quality.",
+                "avatar": "VS"
+            }
+        ]
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
