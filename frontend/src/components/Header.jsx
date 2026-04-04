@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const LOGO_URL = "https://customer-assets.emergentagent.com/job_c461b78e-65c5-4db1-8a61-81ada40ad421/artifacts/wgklteuq_image.png";
 
@@ -78,6 +79,12 @@ export const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
+            <Link
+              to="/customer"
+              className="text-navy font-dm-sans text-sm hover:text-teal transition-colors"
+            >
+              Track Order
+            </Link>
             <a
               href="tel:+911234567890"
               className="flex items-center gap-2 text-navy font-dm-sans text-sm"
@@ -113,6 +120,13 @@ export const Header = () => {
             className="md:hidden py-4 border-t border-slate-200 bg-white"
             data-testid="mobile-nav"
           >
+            <Link
+              to="/customer"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block py-3 text-navy font-dm-sans font-medium hover:text-teal transition-colors"
+            >
+              Track Order
+            </Link>
             {navItems.map((item) => (
               <a
                 key={item.name}

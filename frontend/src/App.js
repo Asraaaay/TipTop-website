@@ -15,6 +15,7 @@ import { WhatsAppButton } from "./components/WhatsAppButton";
 import { Toaster } from "./components/ui/sonner";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminDashboard } from "./pages/AdminDashboard";
+import { CustomerPortal } from "./pages/CustomerPortal";
 
 // Homepage component
 const HomePage = () => {
@@ -46,6 +47,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/customer" element={<CustomerPortal />} />
           </Routes>
         </BrowserRouter>
         <Toaster position="top-right" />

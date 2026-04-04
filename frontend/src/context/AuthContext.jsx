@@ -44,6 +44,16 @@ export const AuthProvider = ({ children }) => {
     return response.data;
   };
 
+  const register = async (payload) => {
+    const response = await axios.post(
+      `${BACKEND_URL}/api/auth/register`,
+      payload,
+      { withCredentials: true }
+    );
+    setUser(response.data);
+    return response.data;
+  };
+
   const logout = async () => {
     try {
       await axios.post(`${BACKEND_URL}/api/auth/logout`, {}, { withCredentials: true });
@@ -54,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );

@@ -45,6 +45,7 @@ const sendAdminWhatsAppAlert = (bookingData) => {
 export const BookingSection = () => {
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
     address: "",
     service: "",
@@ -59,6 +60,11 @@ export const BookingSection = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email.trim())) {
+      newErrors.email = "Enter a valid email address";
+    }
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone is required";
     } else if (!/^[6-9]\d{9}$/.test(formData.phone.trim())) {
@@ -102,6 +108,7 @@ export const BookingSection = () => {
       
       setFormData({
         name: "",
+        email: "",
         phone: "",
         address: "",
         service: "",
@@ -244,6 +251,24 @@ export const BookingSection = () => {
                 />
                 {errors.name && (
                   <p className="text-red-500 text-sm mt-1 font-dm-sans">{errors.name}</p>
+                )}
+              </div>
+
+              {/* Phone */}
+              <div>
+                <Label htmlFor="email" className="font-dm-sans text-navy mb-2 block">
+                  Email Address *
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  className={`font-dm-sans ${errors.email ? "border-red-500 focus:ring-red-500" : "focus:ring-teal"}`}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1 font-dm-sans">{errors.email}</p>
                 )}
               </div>
 

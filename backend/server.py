@@ -10,6 +10,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 import os
 import logging
+import smtplib
+from email.message import EmailMessage
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import List, Optional
 import uuid
@@ -17,6 +19,8 @@ from datetime import datetime, timezone, timedelta
 import bcrypt
 import jwt
 import secrets
+import requests
+from urllib.parse import quote_plus
 
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
@@ -97,6 +101,12 @@ class LoginRequest(BaseModel):
     email: EmailStr
     password: str
 
+class CustomerRegisterRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str = Field(min_length=8)
+    phone: str
+
 class UserResponse(BaseModel):
     id: str
     email: str
@@ -105,6 +115,7 @@ class UserResponse(BaseModel):
 
 class BookingCreate(BaseModel):
     name: str
+    email: Optional[EmailStr] = None
     phone: str
     address: str
     service: str
@@ -114,6 +125,7 @@ class BookingCreate(BaseModel):
 class BookingUpdate(BaseModel):
     status: Optional[str] = None
     name: Optional[str] = None
+    email: Optional[EmailStr] = None
     phone: Optional[str] = None
     address: Optional[str] = None
     service: Optional[str] = None
@@ -125,11 +137,13 @@ class Booking(BaseModel):
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
+    email: Optional[EmailStr] = None
     phone: str
     address: str
     service: str
     pickup_date: str
     pickup_time: str
+    customer_id: Optional[str] = None
     status: str = "pending"
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
@@ -187,6 +201,31 @@ async def login(request: LoginRequest, response: Response):
         "name": user["name"],
         "role": user["role"]
     }
+
+@auth_router.post("/register")
+async def register_customer(request: CustomerRegisterRequest, response: Response):
+    email = request.email.lower()
+    existing = await db.users.find_one({"email": email})
+    if existing:
+        raise HTTPException(status_code=409, detail="Email already registered")
+
+    user_doc = {
+        "email": email,
+        "password_hash": hash_password(request.password),
+        "name": request.name,
+        "phone": request.phone,
+        "role": "customer",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    insert_result = await db.users.insert_one(user_doc)
+    user_id = str(insert_result.inserted_id)
+
+    access_token = create_access_token(user_id, email)
+    refresh_token = create_refresh_token(user_id)
+    response.set_cookie(key="access_token", value=access_token, httponly=True, secure=False, samesite="lax", max_age=86400, path="/")
+    response.set_cookie(key="refresh_token", value=refresh_token, httponly=True, secure=False, samesite="lax", max_age=604800, path="/")
+
+    return {"id": user_id, "email": email, "name": request.name, "role": "customer"}
 
 @auth_router.post("/logout")
 async def logout(response: Response):
@@ -251,6 +290,11 @@ async def update_booking(
         raise HTTPException(status_code=404, detail="Booking not found")
     
     updated_booking = await db.bookings.find_one({"id": booking_id}, {"_id": 0})
+    if "status" in update_data:
+        send_booking_notifications(
+            updated_booking,
+            f"Your booking status is now '{update_data['status']}'."
+        )
     return updated_booking
 
 @api_router.delete("/admin/bookings/{booking_id}")
@@ -274,7 +318,13 @@ async def root():
 async def create_booking(input: BookingCreate):
     booking_obj = Booking(**input.model_dump())
     doc = booking_obj.model_dump()
+    if booking_obj.email:
+        customer = await db.users.find_one({"email": booking_obj.email.lower(), "role": "customer"})
+        if customer:
+            doc["customer_id"] = str(customer["_id"])
+            booking_obj.customer_id = doc["customer_id"]
     await db.bookings.insert_one(doc)
+    send_booking_notifications(doc, "Your pickup booking has been confirmed.")
     return booking_obj
 
 @api_router.get("/bookings", response_model=List[Booking])
@@ -288,6 +338,17 @@ async def get_booking(booking_id: str):
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
     return booking
+
+@api_router.get("/customer/bookings", response_model=List[Booking])
+async def get_customer_bookings(user: dict = Depends(get_current_user)):
+    if user.get("role") != "customer":
+        raise HTTPException(status_code=403, detail="Customer access required")
+
+    bookings = await db.bookings.find(
+        {"$or": [{"email": user["email"]}, {"customer_id": user["id"]}]},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(1000)
+    return bookings
 
 @api_router.post("/contact", response_model=ContactMessage)
 async def create_contact_message(input: ContactMessageCreate):
@@ -374,6 +435,108 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+SMTP_HOST = os.environ.get("SMTP_HOST")
+SMTP_PORT = int(os.environ.get("SMTP_PORT", "587"))
+SMTP_USERNAME = os.environ.get("SMTP_USERNAME")
+SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
+SMTP_USE_TLS = os.environ.get("SMTP_USE_TLS", "true").lower() == "true"
+NOTIFY_FROM_EMAIL = os.environ.get("NOTIFY_FROM_EMAIL", SMTP_USERNAME or "noreply@tiptop.com")
+
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_FROM_NUMBER = os.environ.get("TWILIO_FROM_NUMBER")
+
+def normalize_phone_number(phone: str) -> str:
+    digits = ''.join(filter(str.isdigit, phone))
+    if len(digits) == 10:
+        return f"+91{digits}"
+    if digits.startswith("91") and len(digits) == 12:
+        return f"+{digits}"
+    if phone.startswith("+"):
+        return phone
+    return f"+{digits}" if digits else phone
+
+def send_email_notification(to_email: str, subject: str, body: str) -> bool:
+    if not (SMTP_HOST and SMTP_USERNAME and SMTP_PASSWORD):
+        logger.warning("Email notification skipped: SMTP configuration is incomplete")
+        return False
+
+    try:
+        message = EmailMessage()
+        message["From"] = NOTIFY_FROM_EMAIL
+        message["To"] = to_email
+        message["Subject"] = subject
+        message.set_content(body)
+
+        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=15) as smtp:
+            if SMTP_USE_TLS:
+                smtp.starttls()
+            smtp.login(SMTP_USERNAME, SMTP_PASSWORD)
+            smtp.send_message(message)
+        return True
+    except Exception as exc:
+        logger.exception("Failed to send email notification: %s", exc)
+        return False
+
+def send_sms_notification(to_phone: str, body: str) -> bool:
+    if not (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TWILIO_FROM_NUMBER):
+        logger.warning("SMS notification skipped: Twilio configuration is incomplete")
+        return False
+
+    try:
+        url = f"https://api.twilio.com/2010-04-01/Accounts/{quote_plus(TWILIO_ACCOUNT_SID)}/Messages.json"
+        response = requests.post(
+            url,
+            auth=(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN),
+            data={
+                "From": TWILIO_FROM_NUMBER,
+                "To": normalize_phone_number(to_phone),
+                "Body": body
+            },
+            timeout=15
+        )
+        response.raise_for_status()
+        return True
+    except Exception as exc:
+        logger.exception("Failed to send SMS notification: %s", exc)
+        return False
+
+def send_booking_notifications(booking: dict, status_message: str) -> dict:
+    service_label = booking.get("service", "Laundry Service")
+    pickup_date = booking.get("pickup_date", "N/A")
+    pickup_time = booking.get("pickup_time", "N/A")
+    booking_id = booking.get("id", "N/A")
+    customer_name = booking.get("name", "Customer")
+
+    email_sent = False
+    sms_sent = False
+
+    email = booking.get("email")
+    if email:
+        email_sent = send_email_notification(
+            to_email=email,
+            subject=f"Tip Top Booking Update - {booking_id}",
+            body=(
+                f"Hi {customer_name},\n\n"
+                f"{status_message}\n\n"
+                f"Booking ID: {booking_id}\n"
+                f"Service: {service_label}\n"
+                f"Pickup: {pickup_date} ({pickup_time})\n\n"
+                "Thank you for choosing Tip Top Dry Cleaning Studio."
+            )
+        )
+
+    if booking.get("phone"):
+        sms_sent = send_sms_notification(
+            to_phone=booking["phone"],
+            body=(
+                f"Tip Top: {status_message} "
+                f"Booking {booking_id} | {service_label} | {pickup_date} {pickup_time}"
+            )
+        )
+
+    return {"email_sent": email_sent, "sms_sent": sms_sent}
 
 # ============ STARTUP EVENTS ============
 @app.on_event("startup")
