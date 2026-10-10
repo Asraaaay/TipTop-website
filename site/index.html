@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tip Top — Premium Dry Cleaning Studio</title>
+  <meta name="description" content="Tip Top Dry Cleaning Studio — Premium clothing care with expert dry cleaning, steam ironing, and wash & fold services. Impeccable quality, delivered fresh.">
+  <meta name="theme-color" content="#0A192F">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="site-header" id="header" data-testid="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo" data-testid="logo">
+        <img src="https://customer-assets.emergentagent.com/job_c461b78e-65c5-4db1-8a61-81ada40ad421/artifacts/wgklteuq_image.png" alt="Tip Top logo">
+        <span class="logo-text">Tip Top</span>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#location">Location</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a href="#contact" class="header-cta" data-testid="hero-book-button">Get in Touch</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" data-testid="menu-toggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#services" onclick="closeMobileMenu()">Services</a>
+    <a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a>
+    <a href="#about" onclick="closeMobileMenu()">About</a>
+    <a href="#location" onclick="closeMobileMenu()">Location</a>
+    <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  </div>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content reveal">
+          <span class="hero-eyebrow">Premium Clothing Care</span>
+          <h1>Impeccable Care<br>for <em>Every</em><br>Garment</h1>
+          <p class="hero-desc">
+            Where precision meets care. We treat every piece like our own — from
+            everyday wear to your most treasured fabrics.
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn-primary" data-testid="hero-cta-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              Book a Pickup
+            </a>
+            <a href="#services" class="btn-outline" data-testid="hero-cta-secondary">
+              View Services
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual reveal">
+          <img src="https://images.unsplash.com/photo-1585412459212-8def26f7e84c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHxwcmVtaXVtJTIwZHJ5JTIwY2xlYW5pbmclMjBzdWl0fGVufDB8fHx8MTc3NTMyNDkwN3ww&ixlib=rb-4.1.0&q=85&w=800" alt="Premium suit jacket — impeccably cleaned and pressed" loading="eager">
+          <div class="hero-badge">
+            <div class="badge-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="badge-text">
+              Trusted by 2,000+ clients
+              <span>Eco-friendly products only</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SERVICES ====== -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="services-header reveal">
+        <span class="overline">What We Do</span>
+        <h2 class="section-heading">Expert Care,<br>Every Detail</h2>
+        <p class="section-subtext">
+          Five specialized services — each refined over years of experience to give
+          your garments the treatment they deserve.
+        </p>
+      </div>
+
+      <div class="bento-grid stagger">
+        <!-- Featured: Dry Cleaning -->
+        <div class="bento-card featured reveal" data-testid="service-dry-cleaning">
+          <div class="bento-img-wrap">
+            <img class="bento-img" src="https://images.unsplash.com/photo-1561053720-76cd73ff22c3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHw0fHxwcmVtaXVtJTIwZHJ5JTIwY2xlYW5pbmclMjBzdWl0fGVufDB8fHx8MTc3NTMyNDkwN3ww&ixlib=rb-4.1.0&q=85&w=800" alt="Premium shirts on hangers, dry cleaned" loading="lazy">
+          </div>
+          <div class="bento-body">
+            <h3 class="bento-title">Dry Cleaning</h3>
+            <p class="bento-desc">Gentle, thorough cleaning for suits, dresses, silks, and delicate fabrics. Every garment inspected by hand before and after treatment.</p>
+            <span class="bento-tag">Most Popular →</span>
+          </div>
+        </div>
+
+        <!-- Steam Ironing -->
+        <div class="bento-card reveal" data-testid="service-steam-ironing">
+          <div class="bento-img-wrap">
+            <img class="bento-img" src="https://images.unsplash.com/photo-1740684589228-54b6fba08985?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2ODl8MHwxfHNlYXJjaHwzfHxzdGVhbSUyMGlyb25pbmclMjBjbG90aGVzJTIwcHJvZmVzc2lvbmFsfGVufDB8fHx8MTc3NTMyNDkxOHww&ixlib=rb-4.1.0&q=85&w=600" alt="Professional steam ironing" loading="lazy">
+          </div>
+          <div class="bento-body">
+            <h3 class="bento-title">Steam Ironing</h3>
+            <p class="bento-desc">Crisp, wrinkle-free results with professional-grade steam. Ideal for shirts, trousers, and formal wear.</p>
+            <span class="bento-tag">Quick Turnaround →</span>
+          </div>
+        </div>
+
+        <!-- Wash & Fold -->
+        <div class="bento-card reveal" data-testid="service-wash-fold">
+          <div class="bento-img-wrap">
+            <img class="bento-img" src="https://images.unsplash.com/photo-1760722974657-f64bce2f9cc5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHw0fHxmcmVzaCUyMHdoaXRlJTIwZm9sZGVkJTIwbGF1bmRyeSUyMHRvd2Vsc3xlbnwwfHx8fDE3NzUzMjQ5MDd8MA&ixlib=rb-4.1.0&q=85&w=600" alt="Fresh folded white towels" loading="lazy">
+          </div>
+          <div class="bento-body">
+            <h3 class="bento-title">Wash &amp; Fold</h3>
+            <p class="bento-desc">We handle the everyday load — washed, folded, and returned fresh, ready for your wardrobe.</p>
+            <span class="bento-tag">By the Kilogram →</span>
+          </div>
+        </div>
+
+        <!-- Shoe Cleaning (icon-only) -->
+        <div class="bento-card reveal" data-testid="service-shoe-cleaning">
+          <div class="bento-body">
+            <div style="width:48px;height:48px;background:var(--teal-light);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 18h20l-2-4c-1-2-3-3-5-3H9c-2 0-4 1-5 3l-2 4z"/>
+                <path d="M6 18v2h12v-2"/>
+                <path d="M10 11V6c0-1.5 1-3 3-3"/>
+              </svg>
+            </div>
+            <h3 class="bento-title">Shoe Cleaning</h3>
+            <p class="bento-desc">Sneakers, leather, suede — restored to pristine condition with care.</p>
+            <span class="bento-tag">Specialist Service →</span>
+          </div>
+        </div>
+
+        <!-- Curtain & Upholstery (featured, icon-only) -->
+        <div class="bento-card featured reveal" data-testid="service-curtain-cleaning">
+          <div class="bento-body" style="display:flex;align-items:center;gap:2rem;padding:2rem">
+            <div style="width:56px;height:56px;background:var(--teal-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 2h14"/>
+                <path d="M5 2c0 8-2 14-2 20h6c0-6-2-12-2-20"/>
+                <path d="M19 2c0 8 2 14 2 20h-6c0-6 2-12 2-20"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="bento-title">Curtain &amp; Upholstery Cleaning</h3>
+              <p class="bento-desc">Heavy drapes, sofa covers, cushion fabrics — collected, cleaned, and re-hung if needed. We handle the logistics so you don't have to.</p>
+              <span class="bento-tag">Pickup &amp; Delivery →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== HOW IT WORKS ====== -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="hiw-header reveal">
+        <span class="overline">The Process</span>
+        <h2 class="section-heading">Four Steps to Fresh</h2>
+        <p class="section-subtext">
+          We've streamlined the entire process so your clothes get the best care with
+          zero effort on your part.
+        </p>
+      </div>
+
+      <div class="steps-grid stagger">
+        <div class="step-card reveal">
+          <div class="step-number">1</div>
+          <h3 class="step-title">Schedule</h3>
+          <p class="step-desc">Book a pickup via WhatsApp or call. Choose a time that works for you.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">2</div>
+          <h3 class="step-title">We Collect</h3>
+          <p class="step-desc">Our team arrives at your doorstep — no bag packing needed.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">3</div>
+          <h3 class="step-title">Expert Cleaning</h3>
+          <p class="step-desc">Each garment is individually assessed, treated, and finished by hand.</p>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-number">4</div>
+          <h3 class="step-title">Delivered Fresh</h3>
+          <p class="step-desc">Your clothes return crisp, fresh, and ready to wear — right to your door.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== ABOUT ====== -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="reveal">
+          <span class="overline">About Tip Top</span>
+          <h2 class="section-heading">Craftsmanship<br>in Every Press</h2>
+          <p class="about-text">
+            Tip Top isn't just a dry cleaner — it's a clothing care studio. We opened
+            with a single belief: your garments deserve the same attention to detail
+            that went into making them. Every stitch, every fabric, every finish matters.
+          </p>
+          <p class="about-text" style="margin-top:1rem">
+            We use only eco-certified solvents and modern equipment, ensuring your clothes
+            come back spotless without the environmental cost. It's premium care — responsibly done.
+          </p>
+          <div class="about-stats">
+            <div class="stat-item">
+              <div class="stat-number">2K+</div>
+              <div class="stat-label">Happy Clients</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">99%</div>
+              <div class="stat-label">Satisfaction Rate</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">5+</div>
+              <div class="stat-label">Years of Care</div>
+            </div>
+          </div>
+        </div>
+        <div class="about-img-wrap reveal">
+          <img src="https://images.unsplash.com/photo-1684248850355-19f3efb72f1f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjd8MHwxfHNlYXJjaHwzfHxmcmVzaCUyMHdoaXRlJTIwZm9sZGVkJTIwbGF1bmRyeSUyMHRvd2Vsc3xlbnwwfHx8fDE3NzUzMjQ5MDd8MA&ixlib=rb-4.1.0&q=85&w=700" alt="Close-up of pristine white fabric texture" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== LOCATION & HOURS ====== -->
+  <section class="location" id="location">
+    <div class="container">
+      <div class="reveal">
+        <span class="overline">Visit Us</span>
+        <h2 class="section-heading">Find Our Studio</h2>
+        <p class="section-subtext">
+          Drop by anytime during business hours, or simply schedule a pickup — we'll come to you.
+        </p>
+      </div>
+
+      <div class="location-grid">
+        <div class="map-wrap reveal">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3633.123!2d55.2!3d25.2!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjXCsDEyJzAwLjAiTiA1NcKwMTInMDAuMCJF!5e0!3m2!1sen!2sae!4v1"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Tip Top studio location">
+          </iframe>
+        </div>
+
+        <div class="location-info reveal">
+          <div class="info-block">
+            <div class="info-label">Address</div>
+            <div class="info-value">Tip Top Dry Cleaning Studio<br>Ground Floor, Al Nahda Street<br>Dubai, United Arab Emirates</div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Hours</div>
+            <div class="hours-grid">
+              <span class="hours-day">Mon – Sat</span>
+              <span class="hours-time">8:00 AM – 10:00 PM</span>
+              <span class="hours-day">Sunday</span>
+              <span class="hours-time">9:00 AM – 6:00 PM</span>
+            </div>
+          </div>
+          <div class="info-block">
+            <div class="info-label">Get in Touch</div>
+            <div class="info-value">
+              <a href="tel:+971501234567">+971 50 123 4567</a><br>
+              <a href="mailto:hello@tiptopstudio.ae">hello@tiptopstudio.ae</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT STRIP ====== -->
+  <section class="contact-strip" id="contact">
+    <div class="container">
+      <div class="reveal">
+        <span class="overline">Contact</span>
+        <h2 class="section-heading">Let's Get Started</h2>
+        <p class="section-subtext">
+          Book a pickup, ask a question, or just say hello. We're always happy to help.
+        </p>
+      </div>
+      <div class="contact-methods reveal">
+        <a href="tel:+971501234567" class="contact-pill" data-testid="contact-phone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +971 50 123 4567
+        </a>
+        <a href="https://wa.me/971501234567" class="contact-pill" data-testid="contact-whatsapp" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="var(--teal)" stroke="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp Us
+        </a>
+        <a href="mailto:hello@tiptopstudio.ae" class="contact-pill" data-testid="contact-email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          hello@tiptopstudio.ae
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>&copy; 2026 Tip Top Dry Cleaning Studio. All rights reserved.</span>
+      <ul class="footer-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- ====== WHATSAPP FAB ====== -->
+  <a href="https://wa.me/971501234567" class="whatsapp-fab" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" data-testid="whatsapp-fab">
+    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+</body>
+</html>
