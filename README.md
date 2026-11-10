@@ -1,20 +1,30 @@
-# Tip Top — Premium Dry Cleaning Studio
+# Tip Top — Dry Clean Studio (Marakkadamukku, Varkala)
 
-A modern, high-conversion single-page advertisement website for **Tip Top Dry Cleaning Studio**. Designed with agency-level aesthetics, intentional whitespace, refined typography, and smooth micro-interactions — built with pure vanilla web technologies and zero dependencies.
+A modern, high-converting single-page advertisement website for **Tip Top Dry Clean Studio**, located at **Marakkadamukku, Varkala, Kerala** (മരക്കടമുക്ക്, വർക്കല). Designed with agency-grade aesthetics, intentional whitespace, refined typography, and smooth micro-interactions — built with pure vanilla web technologies and zero dependencies.
 
 ---
 
-## ✨ Features
+## ✨ Brand Identity & Features
 
-- **Agency-Grade Visual Design**: Clean, editorial aesthetic inspired by modern award-winning layouts (Awwwards-style). Balanced typography and curated color palette (Deep Navy, Crisp White, Refined Teal).
-- **Modular Codebase**: Clean separation of concerns with standalone HTML, organized CSS design system, and lightweight vanilla JavaScript for effortless debugging and maintenance.
-- **Bento Grid Services Showcase**: Visual showcase of core services — Dry Cleaning, Steam Ironing, Wash & Fold, Shoe Cleaning, and Curtain & Upholstery care.
-- **Four-Step Process Guide**: Clear, easy-to-follow flow showing customers how the pickup, cleaning, and delivery works.
-- **Interactive Micro-Interactions**: Scroll-triggered reveal animations powered by native `IntersectionObserver` with zero external library bloat.
-- **Conversion-Focused Contact Touchpoints**: Direct call actions, email links, and a persistent WhatsApp Floating Action Button (FAB) for instant booking inquiries.
-- **Studio Location & Hours**: Embedded Google Map, detailed physical address, and weekly operating schedule.
-- **100% Responsive**: Tailored fluid layouts optimized across mobile, tablet, and desktop viewports, complete with a slide-out mobile drawer menu.
-- **Zero Build Step & Lightning Fast**: Pure HTML5, CSS3, and ES6 JavaScript. No Node.js build process, no npm installs, and near-instant load times.
+- **Authentic Signboard Branding**:
+  - **Business Name**: Tip Top Dry Clean Studio
+  - **Tagline**: Quality Dry-Cleaners • Color Quality Assurance
+  - **Official Colors**: Royal Blue (`#0047BA`), Studio Magenta (`#E6007E`), Mascot Yellow (`#FFC700`), Deep Navy (`#0A192F`), and Clean White (`#FFFFFF`).
+  - **Location**: Marakkadamukku, Varkala (മരക്കടമുക്ക്, വർക്കല), Kerala, India
+  - **Direct Contact / WhatsApp**: `+91 95679 46202` (or `9567946202`)
+- **Core Services (Direct from Signboard)**:
+  1. **Dry Cleaning** — Quality dry-cleaning with color quality assurance for suits, silk sarees, delicate fabrics, and wedding wear.
+  2. **Steam Iron** — Commercial steam pressing for crisp, wrinkle-free shirts, trousers, and traditional dhotis (mundu).
+  3. **Laundry** — Hygienic daily wash & fold service for everyday clothes and household linens.
+  4. **Curtain Cleaning** — Deep cleaning and dust extraction for heavy drapes, window curtains, and sofa cushion fabrics.
+  5. **Shoe Cleaning** — Sneakers, canvas, sports, and leather footwear cleaning and restoration.
+- **Storefront Proof**: Showcases the authentic shop board image in the studio section to build immediate trust with local customers.
+- **Conversion Touchpoints**:
+  - Persistent WhatsApp Floating Action Button (FAB) linked directly to `https://wa.me/919567946202`.
+  - Direct one-tap phone call buttons (`tel:+919567946202`).
+  - Google Maps location embed for Marakkadamukku, Varkala.
+- **100% Mobile & Phone Optimized**: Tailored viewports (down to 360px), accessible 44×44px hamburger menu, full slide-out mobile drawer with direct CTAs, and iOS safe area padding.
+- **Zero Build Step**: Pure HTML5, CSS3, and ES6 JavaScript. No Node.js build process, no npm installs, and near-instant load times.
 
 ---
 
@@ -23,12 +33,16 @@ A modern, high-conversion single-page advertisement website for **Tip Top Dry Cl
 ```
 TipTop/
 ├── site/
-│   ├── index.html        # Clean semantic HTML markup and content structure
+│   ├── index.html        # Clean semantic HTML markup with shop info & location
 │   ├── css/
-│   │   └── styles.css    # Design tokens, layout, typography, animations, responsive media queries
-│   └── js/
-│       └── main.js       # Modular vanilla JS (scroll reveals, mobile nav, header states)
-└── README.md             # Project documentation and customization guide
+│   │   └── styles.css    # Design tokens, brand colors (Royal Blue & Magenta), responsive media queries
+│   ├── js/
+│   │   └── main.js       # Modular vanilla JS (scroll reveals, mobile drawer, smooth scroll)
+│   └── images/
+│       ├── logo.png          # Mascot logo extracted from the official signboard
+│       ├── shop-banner.jpg   # Storefront board photo
+│       └── shop-board.jpg    # Full horizontal signboard banner
+└── README.md             # Project documentation
 ```
 
 ---
@@ -62,53 +76,39 @@ php -S localhost:8080
 
 ---
 
-## 🎨 Customization Guide
+## 🎨 Design Tokens & Customization
 
 ### 1. Colors & Typography
-Design tokens are centralized at the top of [`site/css/styles.css`](site/css/styles.css) in the `:root` pseudo-class:
+Design tokens are centralized at the top of [`site/css/styles.css`](site/css/styles.css):
 
 ```css
 :root {
-  --navy: #0A192F;           /* Primary brand & text color */
-  --teal: #0D9488;           /* Accent & CTA highlight color */
-  --teal-hover: #0F766E;     /* Button hover state */
-  --surface: #F8FAFC;        /* Light background sections */
-  --border: #E2E8F0;         /* Card borders and dividers */
+  --navy: #0A192F;           /* Primary text & deep sections */
+  --blue-brand: #0047BA;     /* Tip Top royal blue */
+  --magenta: #E6007E;        /* Dry Clean Studio pink */
+  --yellow-brand: #FFC700;   /* Quality Dry-Cleaners emblem yellow */
+  --surface: #F8FAFC;        /* Light card backgrounds */
+  --border: #E2E8F0;         /* Dividers & subtle borders */
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'DM Sans', sans-serif;
+  --font-malayalam: 'Noto Sans Malayalam', sans-serif;
 }
 ```
 
-### 2. Contact & Booking Details
-Update phone numbers, email addresses, and WhatsApp links in [`site/index.html`](site/index.html):
-- **WhatsApp links**: Replace `https://wa.me/971501234567` with your business WhatsApp phone number (country code + number, without `+` or spaces).
-- **Direct call links**: Update `tel:+971501234567`.
-- **Email links**: Update `mailto:hello@tiptopstudio.ae`.
+### 2. Contact & WhatsApp Details
+Update phone numbers and WhatsApp links in [`site/index.html`](site/index.html):
+- **WhatsApp links**: `https://wa.me/919567946202`
+- **Call links**: `tel:+919567946202`
 
-### 3. Studio Location & Google Maps
-- Update the store address and opening hours in the `#location` section of `site/index.html`.
-- To update the map embed, get your Google Maps embed code via **Google Maps > Share > Embed a map** and replace the `src` attribute of the `<iframe>` in `site/index.html`.
-
-### 4. Images & Photography
-- Replace the Unsplash imagery URLs with high-resolution photography of your actual shop, garments, and team.
-- Update the logo `<img>` in `<header>` and the hero section visual as needed.
+### 3. Studio Location
+- **Address**: Marakkadamukku, Varkala, Thiruvananthapuram District, Kerala — 695141
+- **Google Maps query**: `Marakkadamukku, Varkala, Kerala`
 
 ---
 
 ## 🌐 Deployment
 
 Because this project uses pure static files, it can be hosted anywhere with zero configuration:
-
-- **GitHub Pages**: Set the publishing source to `/site` or move the files to root.
-- **Vercel / Netlify / Cloudflare Pages**: Connect your Git repository and set the publish directory to `site`.
-- **Traditional Hosting (Apache / Nginx / cPanel)**: Upload the files inside `site/` to your server's `public_html` or web root directory.
-
----
-
-## 🛠 Tech Stack
-
-- **HTML5**: Semantic tags, accessible landmarks, and Open Graph / viewport meta tags.
-- **CSS3**: CSS Custom Properties, CSS Grid, Flexbox, `clamp()` fluid typography, and transitions.
-- **JavaScript**: Vanilla ES6 (`IntersectionObserver`, smooth scrolling, event listeners).
-- **Typography**: [Outfit](https://fonts.google.com/specimen/Outfit) & [DM Sans](https://fonts.google.com/specimen/DM+Sans) via Google Fonts.
-- **Icons**: Inline SVG icons (crisp resolution on all screens, zero external icon font libraries).
+- **GitHub Pages**: Set the publishing source to `/site` or move files to root.
+- **Vercel / Netlify / Cloudflare Pages**: Set the publish directory to `site`.
+- **Traditional Hosting (cPanel / Apache / Nginx)**: Upload the files inside `site/` to your server's `public_html` directory.

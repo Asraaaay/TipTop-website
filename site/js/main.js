@@ -15,7 +15,7 @@
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 
   reveals.forEach(el => observer.observe(el));
 
@@ -23,7 +23,7 @@
   /* ── Header scroll shadow ── */
   const header = document.getElementById('header');
   window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 20);
+    header.classList.toggle('scrolled', window.scrollY > 15);
   }, { passive: true });
 
 
@@ -31,26 +31,40 @@
   const menuToggle = document.getElementById('menuToggle');
   const mobileNav = document.getElementById('mobileNav');
 
-  menuToggle.addEventListener('click', () => {
-    menuToggle.classList.toggle('active');
-    mobileNav.classList.toggle('open');
-    document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-  });
+  function toggleMobileMenu() {
+    const isOpen = mobileNav.classList.toggle('open');
+    menuToggle.classList.toggle('active', isOpen);
+    menuToggle.setAttribute('aria-expanded', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
 
-  // Close mobile menu (called from inline onclick on nav links)
+  menuToggle.addEventListener('click', toggleMobileMenu);
+
+  // Close mobile menu (called from inline onclick or programmatic triggers)
   window.closeMobileMenu = function () {
     menuToggle.classList.remove('active');
+    menuToggle.setAttribute('aria-expanded', 'false');
     mobileNav.classList.remove('open');
     document.body.style.overflow = '';
   };
+
+  // Close with Escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileNav.classList.contains('open')) {
+      window.closeMobileMenu();
+    }
+  });
 
 
   /* ── Smooth scroll for anchor links ── */
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-      const target = document.querySelector(this.getAttribute('href'));
+      const href = this.getAttribute('href');
+      if (href === '#' || href === '') return;
+      const target = document.querySelector(href);
       if (target) {
         e.preventDefault();
+        window.closeMobileMenu();
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
